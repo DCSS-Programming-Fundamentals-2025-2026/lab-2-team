@@ -1,4 +1,5 @@
-﻿using To_Do_Manager.Models;
+﻿using To_Do_Manager.Comparers;
+using To_Do_Manager.Models;
 
 namespace To_Do_Manager.Services
 {
@@ -6,11 +7,13 @@ namespace To_Do_Manager.Services
     {
         public static void SortByPriority(TodoTask[] tasks)
         {
+            TaskPriorityComparer comparer = new TaskPriorityComparer();
+
             for (int i = 0; i < tasks.Length; i++)
             {
                 for (int j = 0; j < tasks.Length - 1; j++)
                 {
-                    if (tasks[j].GetPriority() > tasks[j + 1].GetPriority())
+                    if (comparer.Compare(tasks[j], tasks[j + 1]) > 0)
                     {
                         TodoTask temp = tasks[j];
                         tasks[j] = tasks[j + 1];
@@ -26,7 +29,7 @@ namespace To_Do_Manager.Services
             {
                 for (int j = 0; j < tasks.Length - 1; j++)
                 {
-                    if (tasks[j].GetId() > tasks[j + 1].GetId())
+                    if (tasks[j].CompareTo(tasks[j + 1]) > 0)
                     {
                         TodoTask temp = tasks[j];
                         tasks[j] = tasks[j + 1];

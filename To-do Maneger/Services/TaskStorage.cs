@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using To_Do_Manager.Models;
 
 namespace To_Do_Manager.Services
 {
-    public class TaskStorage
+    public class TaskStorage : IEnumerable
     {
         private TodoTask[] tasks;
         private int count;
@@ -44,6 +45,14 @@ namespace To_Do_Manager.Services
             return tasks[index];
         }
 
+        public void SetAt(int index, TodoTask task)
+        {
+            if (index < 0 || index >= count)
+                throw new IndexOutOfRangeException("Невірний індекс");
+
+            tasks[index] = task;
+        }
+
         public void RemoveAt(int index)
         {
             if (index < 0 || index >= count)
@@ -66,13 +75,50 @@ namespace To_Do_Manager.Services
         public TodoTask[] GetAll()
         {
             TodoTask[] result = new TodoTask[count];
-
             for (int i = 0; i < count; i++)
             {
                 result[i] = tasks[i];
             }
-
             return result;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return new TaskEnumerator(tasks, count);
+        }
+    }
+
+    public class TaskEnumerator : IEnumerator
+    {
+        private TodoTask[] _tasks;
+        private int _count;
+        private int _position = -1;
+
+        public TaskEnumerator(TodoTask[] tasks, int count)
+        {
+            _tasks = tasks;
+            _count = count;
+        }
+
+        public bool MoveNext()
+        {
+            _position++;
+            return (_position < _count);
+        }
+
+        public void Reset()
+        {
+            _position = -1;
+        }
+
+        public object Current
+        {
+            get
+            {
+                if (_position < 0 || _position >= _count)
+                    throw new InvalidOperationException();
+                return _tasks[_position];
+            }
         }
     }
 }
