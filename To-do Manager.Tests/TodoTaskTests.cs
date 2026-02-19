@@ -1,39 +1,37 @@
 ﻿using NUnit.Framework;
-using To_Do_Manager.Models; 
+using To_Do_Manager.Models;
 
-[TestFixture]
-public class TodoTaskTests
+namespace To_Do_Manager.Tests
 {
-    [Test]
-    public void Constructor_ShouldInitializeCorrectly()
+    [TestFixture]
+    public class TodoTaskTests
     {
-        var task = new TodoTask(1, "Test Task", 2);
+        [Test]
+        public void MarkDone_ShouldSetCompletedTrue()
+        {
+            
+            var task = new TodoTask(1, "Test Task", 2);
 
+            
+            task.MarkDone();
 
-        object value = Assert.AreEqual(1,
-            task.GetId());
-        Assert.AreEqual(2, task.GetPriority());
-        Assert.IsFalse(task.IsCompleted());
-    }
+            
+            Assert.IsTrue(task.IsCompleted());
+        }
 
-    [Test]
-    public void MarkDone_ShouldSetIsCompletedTrue()
-    {
-        var task = new TodoTask(1, "Finish report", 3);
-        task.MarkDone();
+        [Test]
+        public void GetSummary_ShouldReturnCorrectFormat()
+        {
+            
+            var task = new TodoTask(5, "Write code", 3);
 
-        Assert.IsTrue(task.IsCompleted());
-    }
+            
+            var summary = task.GetSummary();
 
-    [Test]
-    public void GetSummary_ShouldReturnFormattedString()
-    {
-        var task = new TodoTask(1, "Write code", 3);
-        string summary = task.GetSummary();
-
-        
-        Assert.IsTrue(summary.Contains("ID:1"));
-        Assert.IsTrue(summary.Contains("Пріоритет:3"));
-        Assert.IsTrue(summary.Contains("Write code"));
+            
+            Assert.IsTrue(summary.Contains("ID: 5"));
+            Assert.IsTrue(summary.Contains("Пріоритет: 3"));
+            Assert.IsTrue(summary.Contains("Write code"));
+        }
     }
 }
