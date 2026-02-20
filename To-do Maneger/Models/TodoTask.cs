@@ -2,7 +2,7 @@ using System;
 
 namespace To_Do_Manager.Models
 {
-    public class TodoTask
+    public class TodoTask : IComparable
     {
         private int id;
         private string title;
@@ -41,6 +41,21 @@ namespace To_Do_Manager.Models
         {
             string status = isDone ? "[✓]" : "[ ]";
             return $"{status} ID:{id} | Пріоритет:{priority} | {title}";
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+
+            TodoTask otherTask = obj as TodoTask;
+            if (otherTask != null)
+            {
+                return this.id.CompareTo(otherTask.id);
+            }
+            else
+            {
+                throw new ArgumentException("Об'єкт не є TodoTask");
+            }
         }
     }
 }

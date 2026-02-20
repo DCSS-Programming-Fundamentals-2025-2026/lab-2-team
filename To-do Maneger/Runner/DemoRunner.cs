@@ -17,7 +17,7 @@ namespace To_Do_Manager.Runner
                 {
                     Console.WriteLine("\n--- СПИСОК ЗАДАЧ ---");
                     Console.WriteLine("1. Створити задачу");
-                    Console.WriteLine("2. Переглянути список задач");
+                    Console.WriteLine("2. Переглянути список задач (через Enumerator)");
                     Console.WriteLine("3. Позначити задачу виконаною");
                     Console.WriteLine("4. Видалити задачу");
                     Console.WriteLine("5. Статистика");
@@ -42,16 +42,21 @@ namespace To_Do_Manager.Runner
                     }
                     else if (choice == "2")
                     {
-                        TodoTask[] all = storage.GetAll();
-                        if (all.Length == 0)
+                        Console.WriteLine("\n--- ВАШІ ЗАДАЧІ ---");
+                        if (storage.Count() == 0)
                         {
                             Console.WriteLine("На даний момент задач немає");
                         }
                         else
                         {
-                            for (int i = 0; i < all.Length; i++)
+                            int i = 0;
+                            
+                            var it = storage.GetEnumerator();
+                            while (it.MoveNext())
                             {
-                                Console.WriteLine(i + ". " + all[i].GetSummary());
+                                TodoTask task = (TodoTask)it.Current;
+                                Console.WriteLine(i + ". " + task.GetSummary());
+                                i++;
                             }
                         }
                     }
@@ -80,11 +85,13 @@ namespace To_Do_Manager.Runner
                     {
                         TodoTask[] tasks = storage.GetAll();
                         TaskSorting.SortByPriority(tasks);
+                        Console.WriteLine("Відсортовано за пріоритетом!");
                     }
                     else if (choice == "7")
                     {
                         TodoTask[] tasks = storage.GetAll();
                         TaskSorting.SortById(tasks);
+                        Console.WriteLine("Відсортовано за ID!");
                     }
                     else if (choice == "0")
                     {
@@ -98,7 +105,7 @@ namespace To_Do_Manager.Runner
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Помилка, введено текст замість числа");
+                    Console.WriteLine("Помилка: введено текст замість числа");
                 }
                 catch (Exception ex)
                 {
@@ -108,3 +115,4 @@ namespace To_Do_Manager.Runner
         }
     }
 }
+// ....
