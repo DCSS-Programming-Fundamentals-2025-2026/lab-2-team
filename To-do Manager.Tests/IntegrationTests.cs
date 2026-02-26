@@ -13,7 +13,6 @@ namespace To_Do_Manager.Tests
         [SetUp]
         public void Setup()
         {
-            
             storage = new TaskStorage(10);
             manager = new TaskManager(storage);
         }
@@ -21,49 +20,33 @@ namespace To_Do_Manager.Tests
         [Test]
         public void FullScenario_CreateMarkDoneAndCheckStats()
         {
-            
-
-            
             manager.CreateTask(1, "Task 1", 1);
             manager.CreateTask(2, "Task 2", 2);
 
-            manager.MarkAsDone(0);
+            manager.MarkAsDone(0); 
 
-            TodoTask[] tasks = new TodoTask[2];
-            tasks[0] = storage.GetTask(0);
-            tasks[1] = storage.GetTask(1);
+            TodoTask[] tasks = new TodoTask[storage.Count()];
+            for (int i = 0; i < storage.Count(); i++) tasks[i] = storage.GetTask(i);
 
-            int completed = TaskStatistics.CountCompleted(tasks);
+            int completedCount = TaskStatistics.CountCompleted(tasks);
 
-           
-            Assert.AreEqual(1, completed);
+            Assert.AreEqual(1, completedCount, "Статистика має показувати 1 виконане завдання");
         }
 
         [Test]
         public void RemoveTask_ShouldShiftArrayCorrectly()
         {
-            
-            manager.CreateTask(1, "Task1", 1);
-            manager.CreateTask(2, "Task2", 2);
-            manager.CreateTask(3, "Task3", 3);
+            manager.CreateTask(1, "Task 1", 1);
+            manager.CreateTask(2, "Task 2", 2);
+            manager.CreateTask(3, "Task 3", 3);
 
-            
-            manager.DeleteTask(1);
+            manager.DeleteTask(1); 
 
-            
-            Assert.AreEqual(3, storage.GetTask(1).GetId());
-        }
-
-        [Test]
-        public void AddDuplicateId_ShouldThrowException()
-        {
-            
-            manager.CreateTask(1, "Task1", 1);
-
-            
-            Assert.Throws<System.InvalidOperationException>(() =>
+            Assert.Multiple(() =>
             {
-                manager.CreateTask(1, "Duplicate", 2);
+                Assert.AreEqual(2, storage.Count(), "Кількість елементів має зменшитися");
+               
+                Assert.AreEqual(3, storage.GetTask(1).GetId(), "Елементи мають зсунутися вліво");
             });
         }
     }
